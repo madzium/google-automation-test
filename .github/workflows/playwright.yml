@@ -4,6 +4,12 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      test_filter:
+        description: 'Which tests to run, e.g. -g "opens the MCP page" (empty = all tests)'
+        required: false
+        default: ''
 jobs:
   test:
     timeout-minutes: 60
@@ -18,7 +24,7 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npx playwright test ${{ inputs.test_filter }}
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
